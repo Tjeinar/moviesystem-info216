@@ -33,6 +33,8 @@ g.parse('static/rdf/moviedata_turtle4',format='turtle')
 ####################
 ## SPARQL queries ##
 ####################
+
+# Query returning the details about a specific movie title. 
 def movie_details(title):
     user_title = title
     res = g.query("""SELECT DISTINCT ?title ?rating ?year ?director ?genre
