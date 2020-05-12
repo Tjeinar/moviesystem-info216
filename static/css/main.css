@@ -1,0 +1,28 @@
+/* Menu with query result */
+.vertical-menu {
+    width: 330px;
+  }
+  
+  .vertical-menu a {
+    background-color: #eee;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+  }
+  
+  .vertical-menu a:hover {
+    background-color: #ccc;
+  }
+  
+  .vertical-menu a.active {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+.box {
+    height:400px;
+    width:32%;
+    overflow:hidden; 
+    overflow-y:scroll;
+}

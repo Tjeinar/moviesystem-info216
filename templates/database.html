@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+    <div class="column">
+        <div class="form-group">
+            <form method="POST" action="">
+                <legend class="border-bottom mb-4">Database with information about movies</legend>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Movie search</label>
+                    <input type="text" class="form-control" list="movietitle" name ="movietitle" placeholder="Type or click to search.." autocomplete="off">
+                    <datalist id="movietitle">
+                        {% for title in alltitles %}
+                            <option value= "{{ title.title }}">{{ title.title }}</option>
+                        {% endfor %}
+                    </datalist>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+        {% for res in result %}
+            <ul class="list-inline">
+                <li class="list-inline-item"><strong>Movie title: {{res.title}}</strong></li>
+                <li class="list-inline-item">IMDB rating: {{res.rating}}</li>
+                <li class="list-inline-item">Director: {{res.director}}</li>
+                <li class="list-inline-item">Genre: {{res.genre}}</li>
+               <li class="list-inline-item">Year of release: {{ res.year }}</li>
+            </ul>
+            {%endfor%}
+        
+    </div>
+</div>
+{% endblock body %}

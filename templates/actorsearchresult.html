@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        {% if reccomendation|length %}
+        <h1>Reccomended movies -</h1>
+        <p>based on your choices of actors <b>{{ session["ACTORCHOICE1"] }}</b>-<b>{{ session["ACTORCHOICE2"] }}</b>-<b>{{ session["ACTORCHOICE3"] }}</b> and genre</p>
+        
+        <table class="table table-hover">
+            <tr>
+               <th>Title</th>
+               <th>IMDB Rating</th>
+               <th>Genre</th>
+               <th>Director</th>
+               <th>Actors</th>
+               <th>Description</th>
+            </tr>
+            <!-- Result of reccomendation sorted by highest rating-->
+            {% for rec in reccomendation|sort(attribute='rating', reverse = True) %}
+            <tr>
+               <td>{{ rec.title }}</td>
+               <td>{{rec.rating}}</td>
+               <td>{{rec.genre}}</td>
+               <td>{{rec.director}}</td>
+               <td>{{rec.actors}}</td>
+               <td>{{rec.description}}</td>
+            </tr>
+            {%endfor%}
+        {% else %}
+            <br>
+            <h1>Error! Mission value from search. Please return to search page via the button.</h1>
+            <br>
+        {% endif %}
+        </table>
+        <a class="btn btn-primary" href="/actorsearch">Back to search</a>
+    </div>
+{% endblock body %}

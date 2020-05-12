@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container">
+        <div class="column">
+                <form method="POST" action="">
+                    <legend class="border-bottom mb-4">Movie reccomendation - based on your favourite actors and genre!</legend>
+                    <div class="form-group">
+                        <label>Name of actor 1</label>
+                        <input type="text" class="form-control" list="actornames" name ="actornames" placeholder="Type or click to search.." autocomplete="off">
+                        <datalist id="actornames">
+                            {% for actor in allactors %}
+                                <option value= "{{ actor.name }}"></option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Name of actor 2</label>
+                        <input type="text" class="form-control" list="actornames2" name ="actornames2" placeholder="Type or click to search.." autocomplete="off">
+                        <datalist id="actornames2">
+                            {% for actor in allactors %}
+                                <option value= "{{ actor.name }}"></option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Name of actor 3</label>
+                        <input type="text" class="form-control" list="actornames3" name ="actornames3" placeholder="Type or click to search.." autocomplete="off">
+                        <datalist id="actornames3">
+                            {% for actor in allactors %}
+                                <option value= "{{ actor.name }}"></option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Genre</label>
+                        <input type="text" class="form-control" list="actornames4" name ="actornames4" placeholder="Type or click to search.." autocomplete="off">
+                        <datalist id="actornames4">
+                            {% for actor in allactors %}
+                            <option value= "{{ actor.name }}"></option>
+                            {% endfor %}    
+                        </datalist>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+        </div>
+</div>
+{% endblock body %}
