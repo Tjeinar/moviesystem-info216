@@ -9,7 +9,7 @@ this created a virtual environment, and then
 to activate the virtual environment. 
 4. pip install -r requirements.txt
 
-This will install all the dependencies. Now you can run app.py and go to http://127.0.0.1:5000/
+The steps above creates and activates a virtual environment for the project. Installing requirements.txt will make sure all dependencies are included. Now you can run app.py and go to http://127.0.0.1:5000/
 
 
 
