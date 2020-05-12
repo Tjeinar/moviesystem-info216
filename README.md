@@ -2,7 +2,7 @@
 
 To run the web application:
 
-1. Open new terminal and write:
+1. Open new terminal and cd into the project's folder, then write:
 2. virtualenv venv
 3. venv\Scripts\activate
 4. pip install -r requirements.txt
