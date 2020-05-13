@@ -34,9 +34,9 @@ g.parse('static/rdf/moviedata_turtle4',format='turtle')
 genreoptions = ['Action','Adventure','Biography', 'Comedy','Crime','Drama','Family', 'Fantasy','History', 'Horror','Music','Mystery','Romance','Sci-Fi','Sport','Thriller','War','Western'] 
 
 
-####################
-## SPARQL queries ##
-####################
+######################
+### SPARQL queries ###
+######################
 
 # Query returning the details about a specific movie title. 
 def movie_details(title):
