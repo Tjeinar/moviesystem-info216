@@ -34,11 +34,20 @@
                         </datalist>
                     </div>
                     <div class="form-group">
-                        <label>Genre</label>
-                        <input type="text" class="form-control" list="actornames4" name ="actornames4" placeholder="Type or click to search.." autocomplete="off">
-                        <datalist id="actornames4">
-                            {% for actor in allactors %}
-                            <option value= "{{ actor.name }}"></option>
+                        <label>Preferred genre</label>
+                        <input type="text" class="form-control" list="genreoptions" name ="genreoptions" placeholder="Type or click to search.." autocomplete="off">
+                        <datalist id="genreoptions">
+                            {% for genre in genreoptions %}
+                            <option value= "{{ genre }}"></option>
+                            {% endfor %}    
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred genre</label>
+                        <input type="text" class="form-control" list="genreoptions2" name ="genreoptions2" placeholder="Type or click to search.." autocomplete="off">
+                        <datalist id="genreoptions2">
+                            {% for genre in genreoptions %}
+                            <option value= "{{ genre }}"></option>
                             {% endfor %}    
                         </datalist>
                     </div>

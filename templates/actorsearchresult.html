@@ -4,7 +4,8 @@
     <div class="container">
         {% if reccomendation|length %}
         <h1>Reccomended movies -</h1>
-        <p>based on your choices of actors <b>{{ session["ACTORCHOICE1"] }}</b>-<b>{{ session["ACTORCHOICE2"] }}</b>-<b>{{ session["ACTORCHOICE3"] }}</b> and genre</p>
+        <p>based on your choices of actors <b>{{ session["ACTORCHOICE1"] }}</b>-<b>{{ session["ACTORCHOICE2"] }}</b>-<b>{{ session["ACTORCHOICE3"] }}</b> 
+            and preferred genres <b>{{ session["GENRECHOICE"] }}</b> and <b>{{ session["GENRECHOICE2"] }}</b></p>
         
         <table class="table table-hover">
             <tr>
@@ -15,8 +16,8 @@
                <th>Actors</th>
                <th>Description</th>
             </tr>
-            <!-- Result of reccomendation sorted by highest rating-->
-            {% for rec in reccomendation|sort(attribute='rating', reverse = True) %}
+            <!-- Result of reccomended movies, with title and info. -->
+            {% for rec in reccomendation %}
             <tr>
                <td>{{ rec.title }}</td>
                <td>{{rec.rating}}</td>

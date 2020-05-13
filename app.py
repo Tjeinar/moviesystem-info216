@@ -30,6 +30,10 @@ g.bind("dct",dct)
 
 g.parse('static/rdf/moviedata_turtle4',format='turtle')
 
+# List of all the individual movie genre names. 
+genreoptions = ['Action','Adventure','Biography', 'Comedy','Crime','Drama','Family', 'Fantasy','History', 'Horror','Music','Mystery','Romance','Sci-Fi','Sport','Thriller','War','Western'] 
+
+
 ####################
 ## SPARQL queries ##
 ####################
@@ -82,7 +86,7 @@ def allactors_query():
                      ORDER BY ASC(?name)
                      """)
     return list(res)
-
+  
 
 # Query that finds all movies directed by specific director, ordered by highest rating. 
 def specific_query(rating,director):
@@ -101,10 +105,14 @@ def specific_query(rating,director):
                      """) 
     return list(res)
 
-def reccomendation_query(actor1,actor2,actor3):
+# Query that takes in 3 actor names, 2 genres - and gives the top 3 rated movies based on rating. 
+def reccomendation_query(actor1,actor2,actor3,genre1,genre2):
     user_actor_choice1 = actor1
     user_actor_choice2 = actor2
-    user_actor_choice2 = actor3
+    user_actor_choice3 = actor3
+
+    user_genre_choice1 = genre1
+    user_genre_choice2 = genre2
     res = g.query("""SELECT DISTINCT ?title ?rating ?genre ?description ?director (GROUP_CONCAT(distinct ?actor; separator = ", ") as ?actors)
                     WHERE {
                     ?movie mo:title ?title .  
@@ -121,9 +129,15 @@ def reccomendation_query(actor1,actor2,actor3):
                         ?movie mo:hasActor ?actor .
                         ?movie mo:hasActor '"""+actor2+"""'
                     }
-                    FILTER(?rating >= "1"^^xsd:int)
+                    UNION
+                    {
+                        ?movie mo:hasActor ?actor .
+                        ?movie mo:hasActor '"""+actor3+"""' 
+                    }
+                    FILTER (contains(?genre, '"""+genre1+"""'@en ) || contains(?genre, '"""+genre2+"""'@en ))
                     }
                     GROUP BY ?title ?rating ?genre ?description ?director
+                    ORDER BY DESC(?rating)
                     LIMIT 3
                     """)
     return list(res)        
@@ -161,25 +175,28 @@ def actorsearch():
         choice1 = request.form.get("actornames")
         choice2 = request.form.get("actornames2")
         choice3 = request.form.get("actornames3")
-        choice4 = request.form.get("actornames4")
+        choice4 = request.form.get("genreoptions")
+        choice5 = request.form.get("genreoptions2")
 
         session["ACTORCHOICE1"] = choice1
         session["ACTORCHOICE2"] = choice2
         session["ACTORCHOICE3"] = choice3
-        session["ACTORCHOICE4"] = choice4
+        session["GENRECHOICE1"] = choice4
+        session["GENRECHOICE2"] = choice5
         return redirect(url_for("actorsearchresult"))
 
-    return render_template("actorsearch.html", allactors=allactors_query())
+    return render_template("actorsearch.html", allactors=allactors_query(), genreoptions=genreoptions)
 
 @app.route("/actorsearch/result", methods=["GET", "POST"])
 def actorsearchresult():
-    # Using input from session cookie
+    # Using input stored in the session cookie
     choice1 = session.get("ACTORCHOICE1")
     choice2 = session.get("ACTORCHOICE2")
     choice3 = session.get("ACTORCHOICE3")
-    choice4 = session.get("ACTORCHOICE4")
+    choice4 = session.get("GENRECHOICE1")
+    choice5 = session.get("GENRECHOICE2")
 
-    return render_template("actorsearchresult.html",reccomendation=reccomendation_query(choice1,choice2,choice3))
+    return render_template("actorsearchresult.html",reccomendation=reccomendation_query(choice1,choice2,choice3,choice4,choice5))
 
 
 @app.route("/directorsearch", methods=["GET", "POST"])
