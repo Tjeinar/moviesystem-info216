@@ -6,13 +6,15 @@
         <div class="column">
             
                 <form method="POST" action="">
-                    <legend class="border-bottom mb-4">Film Søk</legend>
+                    <legend class="border-bottom mb-4">Movie search - based on director name</legend>
                     <div class="form-group">
                         <label>Director Name</label>
                         <input type="text" class="form-control" list="directorname" name ="directorname" placeholder="Type or click to search.." autocomplete="off">
                         <datalist id="directorname">
                             {% for dir in directors %}
-                                <option value= "{{ dir.name }}">{{ dir.name }}</option>
+                                <select>
+                                    <option value= "{{ dir.name }}">{{ dir.name }}</option>
+                                </select>
                             {% endfor %}
                         </datalist>
                     </div>
@@ -26,7 +28,7 @@
                         </select>
                     </div> -->
                     <div class="form-group">
-                        <label>Rating filter(optional)</label>
+                        <label>Movie Rating filter(optional)</label>
                         <select class="form-control" id="rating" name="rating">
                             {% for i in range(11) %}
                             <option value= "{{ i }}">{{ i }}</option>

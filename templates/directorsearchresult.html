@@ -3,7 +3,7 @@
 {% block body %}
     <div class ="container"></div>
         {% for spec in specific[:1] %}
-            <br><h3>Movies directed by: {{spec.director}}</h3><br>
+            <br><h3>Movies directed by: {{spec.name}}</h3><br>
         {%endfor%}
         <table class="table table-hover">
            <tr>
@@ -12,11 +12,11 @@
            </tr>
            {% for spec in specific %}
            <tr>
-              <td>{{spec.name}}</td>
+              <td>{{spec.title}}</td>
               <td>{{spec.rating}}</td>
            </tr>
            {%endfor%}
      </table>
-     <a class="btn btn-primary" href="/directorsearch">Tilbake</a>
+     <a class="btn btn-primary" href="/directorsearch">Back to search</a>
   </div>
 {% endblock %}
