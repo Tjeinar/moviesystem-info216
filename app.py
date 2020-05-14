@@ -54,17 +54,21 @@ genreoptions = ['Action','Adventure','Biography', 'Comedy','Crime','Drama','Fami
 # Query returning the details about a specific movie title. 
 def movie_details(title):
     user_title = title
-    res = g.query("""SELECT DISTINCT ?title ?rating ?year ?director ?genre
+    res = g.query("""SELECT DISTINCT ?title ?rating ?year ?description ?directorname ?genre (GROUP_CONCAT(DISTINCT ?actorname; separator = ", ") AS ?actors)
                     WHERE {
                     ?movie a mo:Movie .
                     ?movie mo:title ?title .
                     ?movie mo:title '"""+user_title+"""'^^xsd:string . 
                     ?movie dbo:rating ?rating .
+                    ?movie dc:description ?description .
                     ?movie dct:created ?year .
                     ?movie dbo:genre ?genre .
+                    ?movie mo:hasActor ?actor .
                     ?movie mo:hasDirector ?director .
-                    ?director foaf:name ?directorname
+                    ?director foaf:name ?directorname .
+                    ?actor foaf:name ?actorname
                     }
+                    GROUP BY ?title ?rating ?year ?directorname ?genre
                     """)
     return list(res)
 
@@ -231,7 +235,10 @@ def search():
 
     return render_template("directorsearch.html",title="Search", directors = alldirectors_query())
 
-
+# RDF grapher; visualization of our RDF graph
+@app.route('/rdfgraph')
+def extra():
+    return render_template('graph.html')
 
 
 @app.route('/directorsearch/result',methods=['GET','POST'])
@@ -241,8 +248,6 @@ def directorsearchresult():
     ratingreq = session.get("RATING")
     return render_template('directorsearchresult.html',title='Result',specific=specific_query(ratingreq,directorname))
   
-
- 
 
 if __name__ == "__main__":
     app.run(debug=True)

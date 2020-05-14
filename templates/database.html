@@ -7,7 +7,7 @@
             <form method="POST" action="">
                 <legend class="border-bottom mb-4">Database with information about movies</legend>
                 <div class="form-group">
-                    <label for="exampleFormControlSelect1">Movie search</label>
+                    <label for="exampleFormControlSelect1">Look up any movie in our database</label>
                     <input type="text" class="form-control" list="movietitle" name ="movietitle" placeholder="Type or click to search.." autocomplete="off">
                     <datalist id="movietitle">
                         {% for title in alltitles %}
@@ -18,16 +18,27 @@
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
         </div>
-        {% for res in result %}
-            <ul class="list-inline">
-                <li class="list-inline-item"><strong>Movie title: {{res.title}}</strong></li>
-                <li class="list-inline-item">IMDB rating: {{res.rating}}</li>
-                <li class="list-inline-item">Director: {{res.directorname}}</li>
-                <li class="list-inline-item">Genre: {{res.genre}}</li>
-               <li class="list-inline-item">Year of release: {{ res.year }}</li>
-            </ul>
-            {%endfor%}
-        
+        <table class="table table-hover">
+            <!-- Result of reccomended movies query, with title and info. -->
+            {% for res in result %}
+            <tr>
+               <th>Title</th>
+               <th>IMDB Rating</th>
+               <th>Genre</th>
+               <th>Director</th>
+               <th>Actors</th>
+               <th>Description</th>
+            </tr>
+            <tr>
+               <td>{{ res.title }}</td>
+               <td>{{res.rating}}</td>
+               <td>{{res.genre}}</td>
+               <td>{{res.directorname}}</td>
+               <td>{{res.actors}}</td>
+               <td>{{res.description}}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 </div>
 {% endblock body %}
