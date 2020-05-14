@@ -28,9 +28,9 @@ g.bind("foaf", FOAF)
 g.bind("dc", dc)
 g.bind("dct",dct)
 
-g.parse('static/rdf/moviedata_turtle4',format='turtle')
+g.parse('static/rdf/moviedata_turtle5',format='turtle')
 
-### TEST
+### TEST graph
 f = Graph()
 g.bind("ex",ex)
 g.bind("dbo",dbo)
@@ -58,21 +58,6 @@ def movie_details(title):
                     WHERE {
                     ?movie a mo:Movie .
                     ?movie mo:title ?title .
-                    ?movie mo:title '"""+user_title+"""'^^xsd:string .
-                    ?movie dbo:rating ?rating .
-                    ?movie dct:created ?year .
-                    ?movie mo:hasDirector ?director .
-                    ?movie dbo:genre ?genre
-                    }
-                    """)
-    return list(res)
-
-def movie_details2(title):
-    user_title = title
-    res = f.query("""SELECT DISTINCT ?title ?rating ?year ?director ?genre
-                    WHERE {
-                    ?movie a mo:Movie .
-                    ?movie mo:title ?title .
                     ?movie mo:title '"""+user_title+"""'^^xsd:string . 
                     ?movie dbo:rating ?rating .
                     ?movie dct:created ?year .
@@ -86,16 +71,6 @@ def movie_details2(title):
 #Query looking for all director names, ordered alphabetically.
 def alldirectors_query():
     res = g.query("""SELECT DISTINCT ?name
-                    WHERE {
-                    ?director a dbr:Film_Director .
-                    ?director foaf:name ?name
-                    }
-                    ORDER BY ASC(?name)
-                    """)
-    return list(res)
-
-def alldirectors_query2():
-    res = f.query("""SELECT DISTINCT ?name
                     WHERE {
                     ?movie a mo:Movie .
                     ?movie mo:hasDirector ?director .
@@ -132,23 +107,7 @@ def allactors_query():
 def specific_query(rating,director):
     user_rating = rating
     user_director = director
-    res = g.query("""SELECT DISTINCT ?title ?director ?name ?rating
-                     WHERE {
-                     ?title a mo:Movie .
-                     ?title mo:hasDirector ?director .
-                     ?title mo:hasDirector '"""+user_director+"""' .
-                     ?title mo:title ?name .
-                     ?title dbo:rating ?rating .
-                     FILTER (?rating >= '"""+user_rating+"""'^^xsd:float) 
-                     }
-                     ORDER BY DESC(?rating)
-                     """) 
-    return list(res)
-
-def specific_query2(rating,director):
-    user_rating = rating
-    user_director = director
-    res = f.query("""SELECT DISTINCT ?title ?name ?rating
+    res = g.query("""SELECT DISTINCT ?title ?name ?rating
                      WHERE {
                      ?movie a mo:Movie .
                      ?movie mo:title ?title .
@@ -162,44 +121,8 @@ def specific_query2(rating,director):
                      """) 
     return list(res)
 
-# Query that takes in 3 actor names, 2 genres - and gives the top 3 rated movies based on rating. 
-def reccomendation_query(actor1,actor2,actor3,genre1,genre2):
-    user_actor_choice1 = actor1
-    user_actor_choice2 = actor2
-    user_actor_choice3 = actor3
-
-    user_genre_choice1 = genre1
-    user_genre_choice2 = genre2
-    res = g.query("""SELECT DISTINCT ?title ?rating ?genre ?description ?director (GROUP_CONCAT(distinct ?actor; separator = ", ") as ?actors)
-                    WHERE {
-                    ?movie mo:title ?title .  
-                    ?movie dbo:rating ?rating .
-                    ?movie dbo:genre ?genre .
-                    ?movie dc:description ?description .
-                    ?movie mo:hasDirector ?director .
-                    {
-                        ?movie mo:hasActor ?actor .
-                        ?movie mo:hasActor '"""+actor1+"""'
-                    }
-                    UNION
-                    {
-                        ?movie mo:hasActor ?actor .
-                        ?movie mo:hasActor '"""+actor2+"""'
-                    }
-                    UNION
-                    {
-                        ?movie mo:hasActor ?actor .
-                        ?movie mo:hasActor '"""+actor3+"""' 
-                    }
-                    FILTER (contains(?genre, '"""+genre1+"""'@en ) || contains(?genre, '"""+genre2+"""'@en ))
-                    }
-                    GROUP BY ?title ?rating ?genre ?description ?director
-                    ORDER BY DESC(?rating)
-                    LIMIT 3
-                    """)
-    return list(res)        
 # Query that takes in 3 actor names, 2 genres - and returns the top rated movies based on rating. Limited by max 3 results. 
-def reccomendation_query2(actor1,actor2,actor3,genre1,genre2):
+def reccomendation_query(actor1,actor2,actor3,genre1,genre2):
     user_actor_choice1 = actor1
     user_actor_choice2 = actor2
     user_actor_choice3 = actor3
@@ -254,9 +177,9 @@ def database():
         movietitle = request.form.get("movietitle")
 
         session["MOVIETITLE"] = movietitle
-        return render_template("database.html",alltitles=alltitles_query(),result=movie_details2(session["MOVIETITLE"]),check=session["MOVIETITLE"] )
+        return render_template("database.html",alltitles=alltitles_query(),result=movie_details(session["MOVIETITLE"]),check=session["MOVIETITLE"] )
 
-    return render_template("database.html",alltitles=alltitles_query(), details=movie_details2(" "))
+    return render_template("database.html",alltitles=alltitles_query(), details=movie_details(" "))
 
 
 
@@ -289,7 +212,7 @@ def actorsearchresult():
     choice4 = session.get("GENRECHOICE1")
     choice5 = session.get("GENRECHOICE2")
 
-    return render_template("actorsearchresult.html",reccomendation=reccomendation_query2(choice1,choice2,choice3,choice4,choice5))
+    return render_template("actorsearchresult.html",reccomendation=reccomendation_query(choice1,choice2,choice3,choice4,choice5))
 
 
 @app.route("/directorsearch", methods=["GET", "POST"])
@@ -306,7 +229,7 @@ def search():
         #print(session)
         return redirect(url_for('directorsearchresult'))
 
-    return render_template("directorsearch.html",title="Search", directors = alldirectors_query2())
+    return render_template("directorsearch.html",title="Search", directors = alldirectors_query())
 
 
 
@@ -316,7 +239,7 @@ def directorsearchresult():
    
     directorname = session.get("DIRECTORNAME")
     ratingreq = session.get("RATING")
-    return render_template('directorsearchresult.html',title='Result',specific=specific_query2(ratingreq,directorname))
+    return render_template('directorsearchresult.html',title='Result',specific=specific_query(ratingreq,directorname))
   
 
  
