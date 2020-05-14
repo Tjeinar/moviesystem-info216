@@ -10,20 +10,22 @@
         <table class="table table-hover">
             <tr>
                <th>Title</th>
+               <th>Released</th>
                <th>IMDB Rating</th>
                <th>Genre</th>
                <th>Director</th>
-               <th>Actors</th>
+               <th>Starring</th>
                <th>Description</th>
             </tr>
             <!-- Result of reccomended movies, with title and info. -->
             {% for rec in reccomendation %}
             <tr>
                <td>{{ rec.title }}</td>
+               <td>{{ rec.year }}</td>
                <td>{{rec.rating}}</td>
                <td>{{rec.genre}}</td>
-               <td>{{rec.director}}</td>
-               <td>{{rec.actors}}</td>
+               <td>{{rec.directorname}}</td>
+               <td>{{rec.actorname}}</td>
                <td>{{rec.description}}</td>
             </tr>
             {%endfor%}

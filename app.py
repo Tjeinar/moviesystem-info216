@@ -198,6 +198,42 @@ def reccomendation_query(actor1,actor2,actor3,genre1,genre2):
                     LIMIT 3
                     """)
     return list(res)        
+# Query that takes in 3 actor names, 2 genres - and returns the top rated movies based on rating. Limited by max 3 results. 
+def reccomendation_query2(actor1,actor2,actor3,genre1,genre2):
+    user_actor_choice1 = actor1
+    user_actor_choice2 = actor2
+    user_actor_choice3 = actor3
+
+    user_genre_choice1 = genre1
+    user_genre_choice2 = genre2
+    res = f.query("""SELECT DISTINCT ?title ?rating ?genre ?year ?description ?directorname ?actorname
+                    WHERE {
+                    ?movie mo:title ?title .  
+                    ?movie dbo:rating ?rating .
+                    ?movie dbo:genre ?genre .
+                    ?movie dct:created ?year .
+                    ?movie dc:description ?description .
+                    ?movie mo:hasDirector ?director .
+                    ?director foaf:name ?directorname .
+                    ?movie mo:hasActor ?actor .
+                    ?actor foaf:name ?actorname .
+                    {
+                        ?actor foaf:name '"""+actor1+"""'
+                    }
+                    UNION
+                    {
+                        ?actor foaf:name '"""+actor2+"""'
+                    }
+                    UNION
+                    {
+                        ?actor foaf:name '"""+actor3+"""' 
+                    }
+                    FILTER (contains(?genre, '"""+genre1+"""'@en ) || contains(?genre, '"""+genre2+"""'@en ))
+                    }
+                    ORDER BY DESC(?rating)
+                    LIMIT 3
+                    """)
+    return list(res)        
     
 ###################
 ### App routing ###
@@ -253,7 +289,7 @@ def actorsearchresult():
     choice4 = session.get("GENRECHOICE1")
     choice5 = session.get("GENRECHOICE2")
 
-    return render_template("actorsearchresult.html",reccomendation=reccomendation_query(choice1,choice2,choice3,choice4,choice5))
+    return render_template("actorsearchresult.html",reccomendation=reccomendation_query2(choice1,choice2,choice3,choice4,choice5))
 
 
 @app.route("/directorsearch", methods=["GET", "POST"])
