@@ -28,20 +28,8 @@ g.bind("foaf", FOAF)
 g.bind("dc", dc)
 g.bind("dct",dct)
 
+# Parsing RDF data to graph. 
 g.parse('static/rdf/moviedata_turtle5',format='turtle')
-
-### TEST graph
-f = Graph()
-g.bind("ex",ex)
-g.bind("dbo",dbo)
-g.bind("dbr",dbr)
-g.bind("mo", mo)
-g.bind("foaf", FOAF)
-g.bind("dc", dc)
-g.bind("dct",dct)
-
-f.parse('static/rdf/moviedata_turtle5',format='turtle')
-### 
 
 # List of all the individual movie genre names. 
 genreoptions = ['Action','Adventure','Biography', 'Comedy','Crime','Drama','Family', 'Fantasy','History', 'Horror','Music','Mystery','Romance','Sci-Fi','Sport','Thriller','War','Western'] 
@@ -133,7 +121,7 @@ def reccomendation_query(actor1,actor2,actor3,genre1,genre2):
 
     user_genre_choice1 = genre1
     user_genre_choice2 = genre2
-    res = f.query("""SELECT DISTINCT ?title ?rating ?genre ?year ?description ?directorname ?actorname
+    res = g.query("""SELECT DISTINCT ?title ?rating ?genre ?year ?description ?directorname ?actorname
                     WHERE {
                     ?movie mo:title ?title .  
                     ?movie dbo:rating ?rating .
@@ -166,6 +154,8 @@ def reccomendation_query(actor1,actor2,actor3,genre1,genre2):
 ### App routing ###
 ###################
 
+# Here we are defining various routes for the app(URLs) and rendering templates, passing sparql results as lists into variables. 
+
 @app.route('/')
 def enter():
     return redirect(url_for("home"))
@@ -177,9 +167,12 @@ def home():
 @app.route("/database",methods=["GET", "POST"])
 def database():
     session["MOVIETITLE"] = None
+
+    # Getting form data entered by user in search field
     if request.method == "POST":
         movietitle = request.form.get("movietitle")
 
+        # Storing user input data in session cookie
         session["MOVIETITLE"] = movietitle
         return render_template("database.html",alltitles=alltitles_query(),result=movie_details(session["MOVIETITLE"]),check=session["MOVIETITLE"] )
 
@@ -190,7 +183,7 @@ def database():
 @app.route("/actorsearch",methods=["GET", "POST"])
 def actorsearch():
 
-    # Getting input from user's favourite actors
+    # Getting input from user's favourite actors and genres
     if request.method == "POST":
         choice1 = request.form.get("actornames")
         choice2 = request.form.get("actornames2")
@@ -205,11 +198,12 @@ def actorsearch():
         session["GENRECHOICE2"] = choice5
         return redirect(url_for("actorsearchresult"))
 
+    # Passing list of results from allactors_query() to a variable called allactors
     return render_template("actorsearch.html", allactors=allactors_query(), genreoptions=genreoptions)
 
 @app.route("/actorsearch/result", methods=["GET", "POST"])
 def actorsearchresult():
-    # Using input stored in the session cookie
+    # Using input stored in the session cookie 
     choice1 = session.get("ACTORCHOICE1")
     choice2 = session.get("ACTORCHOICE2")
     choice3 = session.get("ACTORCHOICE3")
@@ -230,16 +224,10 @@ def search():
         ## Storing user input data into session cookie
         session["DIRECTORNAME"] = director 
         session["RATING"] = rating
-        #print(session)
+      
         return redirect(url_for('directorsearchresult'))
 
     return render_template("directorsearch.html",title="Search", directors = alldirectors_query())
-
-# RDF grapher; visualization of our RDF graph
-@app.route('/rdfgraph')
-def extra():
-    return render_template('graph.html')
-
 
 @app.route('/directorsearch/result',methods=['GET','POST'])
 def directorsearchresult():
@@ -247,7 +235,11 @@ def directorsearchresult():
     directorname = session.get("DIRECTORNAME")
     ratingreq = session.get("RATING")
     return render_template('directorsearchresult.html',title='Result',specific=specific_query(ratingreq,directorname))
-  
+
+# RDF grapher; visualization of our RDF graph
+@app.route('/rdfgraph')
+def extra():
+    return render_template('graph.html')  
 
 if __name__ == "__main__":
     app.run(debug=True)
