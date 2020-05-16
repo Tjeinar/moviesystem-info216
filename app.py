@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, url_for, redirect, session
-from rdflib import Graph, Literal, Namespace, URIRef, XSD
+from rdflib import Graph, Literal, Namespace, URIRef
 from rdflib.namespace import RDF, FOAF, RDFS, OWL, XSD
 from rdflib.plugins.sparql import prepareQuery
 import datetime 
@@ -28,8 +28,9 @@ g.bind("foaf", FOAF)
 g.bind("dc", dc)
 g.bind("dct",dct)
 
+
 # Parsing RDF data to graph. 
-g.parse('static/rdf/moviedata_turtle5',format='turtle')
+g.parse('static/rdf/moviedata_turtle',format='turtle')
 
 # List of all the individual movie genre names. 
 genreoptions = ['Action','Adventure','Biography', 'Comedy','Crime','Drama','Family', 'Fantasy','History', 'Horror','Music','Mystery','Romance','Sci-Fi','Sport','Thriller','War','Western'] 
