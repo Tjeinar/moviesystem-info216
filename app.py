@@ -175,7 +175,7 @@ def database():
 
         # Storing user input data in session cookie
         session["MOVIETITLE"] = movietitle
-        return render_template("database.html",alltitles=alltitles_query(),result=movie_details(session["MOVIETITLE"]),check=session["MOVIETITLE"] )
+        return render_template("database.html",alltitles=alltitles_query(),result=movie_details(session["MOVIETITLE"]))
 
     return render_template("database.html",alltitles=alltitles_query(), details=movie_details(" "))
 

@@ -23,6 +23,7 @@
             {% for res in result %}
             <tr>
                <th>Title</th>
+               <th>Released</th>
                <th>IMDB Rating</th>
                <th>Genre</th>
                <th>Director</th>
@@ -31,11 +32,12 @@
             </tr>
             <tr>
                <td>{{ res.title }}</td>
-               <td>{{res.rating}}</td>
-               <td>{{res.genre}}</td>
-               <td>{{res.directorname}}</td>
-               <td>{{res.actors}}</td>
-               <td>{{res.description}}</td>
+               <td>{{ res.year }}</td>
+               <td>{{ res.rating }}</td>
+               <td>{{ res.genre }}</td>
+               <td>{{ res.directorname }}</td>
+               <td>{{ res.actors }}</td>
+               <td>{{ res.description }}</td>
             </tr>
             {% endfor %}
         </table>
