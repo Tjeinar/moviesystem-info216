@@ -3,8 +3,8 @@
 To run the web application, we have included requirements.txt - a file with all the required packages to run the app. 
 
 1. Open new terminal and cd into the project's folder, then write:
-2. virtualenv venv
-3. venv\Scripts\activate
+2. py -m venv env
+3. .\venv\Scripts\activate
 4. pip install -r requirements.txt
 
 If that does not work, the neccesary packages are:
